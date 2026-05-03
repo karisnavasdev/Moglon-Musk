@@ -6,7 +6,7 @@
     <!-- Solana token mint: used for CA text, DexScreener embed, and Jupiter buy link -->
     <meta name="token-mint" content="abcd" />
 
-    <link rel="icon" type="image/png" href="/scam_altman_png.png" />
+    <link rel="icon" type="image/png" href="/11.png" />
     <title>SCAMMAN</title>
     <meta name="description" content="SCAMMAN. Meme only. Not financial advice." />
     <meta property="og:type" content="website" />
@@ -28,17 +28,18 @@
     <script async src="https://bolt.new/badge.js?s=08d3f260-7476-4fbb-9fc4-fd28cc86d6d7"></script>
 
     <style>
+      /* Classic flying LIE/SCAM text (same motion as original) */
       @keyframes flyOut {
         0% {
-          transform: translate(0, 0) scale(0.4);
+          transform: translate(0, 0) rotate(var(--fly-rot, 0deg)) scale(0.4);
           opacity: 0;
         }
         15% {
           opacity: 1;
-          transform: translate(40px, -10px) scale(1.05);
+          transform: translate(40px, -10px) rotate(var(--fly-rot, 0deg)) scale(1.05);
         }
         100% {
-          transform: translate(700px, -60px) scale(1.15);
+          transform: translate(700px, -60px) rotate(var(--fly-rot, 0deg)) scale(1.15);
           opacity: 0;
         }
       }
@@ -85,7 +86,7 @@
         display: block;
       }
 
-      /* “CLICK THIS” on hero card — desktop / fine pointer only */
+      /* Inside #flyers-root: hint below flying words (z-index), still pointer-events none */
       .face-card__hover-hint {
         position: absolute;
         inset: 0;
@@ -94,9 +95,12 @@
         justify-content: flex-end;
         padding-right: clamp(0.75rem, 5vw, 3rem);
         pointer-events: none;
-        z-index: 5;
+        z-index: 1;
         opacity: 0;
         transition: opacity 0.22s ease;
+      }
+      #flyers-root .flyer-word {
+        z-index: 2;
       }
       .face-card__hover-text {
         font-family: "Bangers", Impact, "Arial Black", system-ui, sans-serif;
@@ -227,6 +231,15 @@
           height: min(82vh, 920px);
         }
       }
+
+      /*
+       * Flyers sit above #face-btn so words are visible. Parent pointer-events:none does NOT
+       * disable clicks on children (they default to auto) — those children were stealing taps.
+       */
+      #flyers-root,
+      #flyers-root * {
+        pointer-events: none !important;
+      }
     </style>
   </head>
   <body>
@@ -303,7 +316,7 @@
               type="button"
               id="face-btn"
               aria-label="Make him talk"
-              class="absolute inset-0 w-full h-full block focus:outline-none z-0"
+              class="absolute inset-0 w-full h-full block focus:outline-none"
               style="
                 background-image: url('/hf_20260428_075602_0376b7fc-a469-408f-801f-b9cdf8b47c93.png');
                 background-size: cover;
@@ -311,10 +324,11 @@
                 cursor: pointer;
               "
             ></button>
-            <div class="face-card__hover-hint" aria-hidden="true">
-              <span class="face-card__hover-text">click this</span>
+            <div id="flyers-root" class="absolute inset-0 pointer-events-none overflow-hidden z-[8]">
+              <div class="face-card__hover-hint" aria-hidden="true">
+                <span class="face-card__hover-text">click this</span>
+              </div>
             </div>
-            <div id="flyers-root" class="absolute inset-0 pointer-events-none overflow-hidden z-[8]"></div>
             <div class="absolute top-4 right-4 flex gap-2 z-10">
               <div
                 class="px-3 py-1.5 rounded-lg border-[3px] border-black bg-black/70 text-white text-xs md:text-sm flex items-center gap-2 shadow-[3px_3px_0_0_rgba(0,0,0,0.6)]"
@@ -397,8 +411,7 @@
               </div>
             </section>
 
-            <!-- Buy now -->
-    
+           
 
         <section class="mt-20 grid md:grid-cols-3 gap-5">
           <div
@@ -455,17 +468,21 @@
       const SUPABASE_ANON_KEY =
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4ZmNpaGpicHh5ZnhlcnVkb3BpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczNTkxNjMsImV4cCI6MjA5MjkzNTE2M30.nRgBRj6d3-zCELkQMdeOAlx0LEX0IYRigtAkmBU448I";
 
-      const WORD_COLORS = { LIE: "#FFD43B", SCAM: "#FF3B3B" };
-      const CLOSED_IMG = "/hf_20260428_075602_0376b7fc-a469-408f-801f-b9cdf8b47c93.png";
-      const OPEN_IMG = "/hf_20260428_092806_0deb888c-3895-408b-b754-aa5fe56d94b6.png";
+      /** Flying labels on face click — random word, all in red */
+      const FLY_WORDS = ["LIE", "SCAM", "LOL"];
+      const FLY_RED = "#FF3B3B";
 
       const mint =
         document.querySelector('meta[name="token-mint"]')?.getAttribute("content")?.trim() || "abcd";
 
-      document.getElementById("ca-display").textContent = mint;
-      document.getElementById("dex-iframe").src =
-        `https://dexscreener.com/solana/abcd?embed=1&theme=dark&trades=0&info=0`;
-      document.getElementById("buy-link").href = `https://jup.ag/swap/SOL-${mint}`;
+      const caEl = document.getElementById("ca-display");
+      if (caEl) caEl.textContent = mint;
+      const dexFrame = document.getElementById("dex-iframe");
+      if (dexFrame) {
+        dexFrame.src = `https://dexscreener.com/solana/${encodeURIComponent(mint)}?embed=1&theme=dark&trades=0&info=0`;
+      }
+      const buyLink = document.getElementById("buy-link");
+      if (buyLink) buyLink.href = `https://jup.ag/swap/SOL-${mint}`;
 
       const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -477,81 +494,84 @@
         .from("shot_counter")
         .select("id, count")
         .then(({ data }) => {
-          if (!data) return;
+          if (!data || !elLie || !elScam) return;
           for (const row of data) {
             if (row.id === "LIE" || row.id === "SCAM") counts[row.id] = Number(row.count) || 0;
           }
           elLie.textContent = counts.LIE.toLocaleString();
           elScam.textContent = counts.SCAM.toLocaleString();
-        });
+        })
+        .catch(() => {});
 
       let flyerId = 0;
       const flyersRoot = document.getElementById("flyers-root");
       const faceBtn = document.getElementById("face-btn");
 
+      if (!flyersRoot || !faceBtn) {
+        console.error("SCAMMAN: missing #flyers-root or #face-btn");
+      } else {
       faceBtn.addEventListener("click", () => {
-        const word = Math.random() < 0.5 ? "LIE" : "SCAM";
-        const id = ++flyerId;
+        const word = FLY_WORDS[Math.floor(Math.random() * FLY_WORDS.length)];
+        flyerId += 1;
         const duration = 1100 + Math.random() * 400;
         const top = 38 + Math.random() * 10;
         const rotate = -8 + Math.random() * 16;
 
         const span = document.createElement("span");
-        span.className = "absolute pointer-events-none select-none whitespace-nowrap";
+        span.className = "flyer-word absolute pointer-events-none select-none whitespace-nowrap";
         span.textContent = word + "!";
         span.style.top = `${top}%`;
         span.style.left = "32%";
-        span.style.color = WORD_COLORS[word];
+        span.style.color = FLY_RED;
         span.style.fontSize = "clamp(28px, 5vw, 64px)";
         span.style.webkitTextStroke = "3px #000";
         span.style.textShadow = "4px 4px 0 rgba(0,0,0,0.45)";
+        span.style.setProperty("--fly-rot", `${rotate}deg`);
         span.style.animation = `flyOut ${duration}ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards`;
-        span.style.transform = `rotate(${rotate}deg)`;
         flyersRoot.appendChild(span);
 
         faceBtn.classList.remove("face-shake");
         void faceBtn.offsetWidth;
         faceBtn.classList.add("face-shake");
-        faceBtn.style.backgroundImage = `url('${OPEN_IMG}')`;
         setTimeout(() => faceBtn.classList.remove("face-shake"), 180);
-        setTimeout(() => {
-          faceBtn.style.backgroundImage = `url('${CLOSED_IMG}')`;
-        }, 220);
-        setTimeout(() => {
-          span.remove();
-        }, duration + 100);
+        setTimeout(() => span.remove(), duration + 100);
 
-        counts[word]++;
-        elLie.textContent = counts.LIE.toLocaleString();
-        elScam.textContent = counts.SCAM.toLocaleString();
-        supabase.rpc("increment_shot_counter", { word }).then(() => {});
+        if (word === "LIE" || word === "SCAM") {
+          counts[word]++;
+          if (elLie) elLie.textContent = counts.LIE.toLocaleString();
+          if (elScam) elScam.textContent = counts.SCAM.toLocaleString();
+          supabase.rpc("increment_shot_counter", { word }).then(() => {}).catch(() => {});
+        }
       });
+      }
 
       const copyBtn = document.getElementById("copy-ca");
       const copyLabel = document.getElementById("copy-label");
       const iconDefault = document.getElementById("copy-icon-default");
       const iconDone = document.getElementById("copy-icon-done");
 
-      copyBtn.addEventListener("click", async () => {
-        try {
-          await navigator.clipboard.writeText(mint);
-        } catch {
-          const ta = document.createElement("textarea");
-          ta.value = mint;
-          document.body.appendChild(ta);
-          ta.select();
-          document.execCommand("copy");
-          document.body.removeChild(ta);
-        }
-        copyLabel.textContent = "COPIED!";
-        iconDefault.classList.add("hidden");
-        iconDone.classList.remove("hidden");
-        setTimeout(() => {
-          copyLabel.textContent = "COPY CA";
-          iconDefault.classList.remove("hidden");
-          iconDone.classList.add("hidden");
-        }, 1800);
-      });
+      if (copyBtn && copyLabel && iconDefault && iconDone) {
+        copyBtn.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(mint);
+          } catch {
+            const ta = document.createElement("textarea");
+            ta.value = mint;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand("copy");
+            document.body.removeChild(ta);
+          }
+          copyLabel.textContent = "COPIED!";
+          iconDefault.classList.add("hidden");
+          iconDone.classList.remove("hidden");
+          setTimeout(() => {
+            copyLabel.textContent = "COPY CA";
+            iconDefault.classList.remove("hidden");
+            iconDone.classList.add("hidden");
+          }, 1800);
+        });
+      }
     </script>
   </body>
 </html>
