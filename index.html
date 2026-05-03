@@ -2,8 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/scam_altman_png.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Solana token mint: used for CA text, DexScreener embed, and Jupiter buy link -->
+    <meta name="token-mint" content="abcd" />
+
+    <link rel="icon" type="image/png" href="/scam_altman_png.png" />
     <title>SCAMMAN</title>
     <meta name="description" content="SCAMMAN. Meme only. Not financial advice." />
     <meta property="og:type" content="website" />
@@ -16,10 +19,539 @@
     <meta name="twitter:title" content="SCAMMAN" />
     <meta name="twitter:description" content="SCAMMAN. Meme only. Not financial advice." />
     <meta name="twitter:image" content="/scam_altman_png.png" />
-    <script type="module" crossorigin src="/assets/index-Bf1GPvDM.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-_yqIOrF-.css">
-  <script async src="https://bolt.new/badge.js?s=08d3f260-7476-4fbb-9fc4-fd28cc86d6d7"></script></head>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/assets/index-_yqIOrF-.css" />
+
+    <script async src="https://bolt.new/badge.js?s=08d3f260-7476-4fbb-9fc4-fd28cc86d6d7"></script>
+
+    <style>
+      @keyframes flyOut {
+        0% {
+          transform: translate(0, 0) scale(0.4);
+          opacity: 0;
+        }
+        15% {
+          opacity: 1;
+          transform: translate(40px, -10px) scale(1.05);
+        }
+        100% {
+          transform: translate(700px, -60px) scale(1.15);
+          opacity: 0;
+        }
+      }
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translate(0, 0);
+        }
+        25% {
+          transform: translate(-3px, 1px);
+        }
+        50% {
+          transform: translate(3px, -1px);
+        }
+        75% {
+          transform: translate(-2px, 2px);
+        }
+      }
+      .face-shake {
+        animation: shake 180ms ease-in-out;
+      }
+      .meme-gallery {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.75rem;
+        width: 100%;
+      }
+      @media (min-width: 768px) {
+        .meme-gallery {
+          gap: 1rem;
+        }
+      }
+      /* Same box for every slot (square, equal to column width) */
+      .meme-gallery-item {
+        aspect-ratio: 1 / 1;
+        width: 100%;
+        overflow: hidden;
+      }
+      .meme-gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+      }
+
+      /* “CLICK THIS” on hero card — desktop / fine pointer only */
+      .face-card__hover-hint {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: clamp(0.75rem, 5vw, 3rem);
+        pointer-events: none;
+        z-index: 5;
+        opacity: 0;
+        transition: opacity 0.22s ease;
+      }
+      .face-card__hover-text {
+        font-family: "Bangers", Impact, "Arial Black", system-ui, sans-serif;
+        font-size: clamp(2rem, 7vw, 4.25rem);
+        color: #fff;
+        letter-spacing: 0.08em;
+        line-height: 1;
+        -webkit-text-stroke: 1.5px rgba(0, 0, 0, 0.35);
+        text-shadow:
+          0 1px 0 #f5f5f5,
+          0 2px 0 #e0e0e0,
+          0 3px 0 #c8c8c8,
+          0 4px 0 #b0b0b0,
+          0 5px 0 #989898,
+          0 6px 0 #808080,
+          0 7px 0 #686868,
+          0 8px 0 #505050,
+          0 10px 14px rgba(0, 0, 0, 0.4),
+          0 14px 28px rgba(0, 0, 0, 0.25);
+        transform: perspective(500px) rotateY(-6deg);
+      }
+      @media (hover: hover) and (pointer: fine) {
+        .face-card:hover .face-card__hover-hint {
+          opacity: 1;
+        }
+      }
+
+      /* Animated green page background */
+      .site-shell {
+        isolation: isolate;
+      }
+      .site-bg {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .site-bg--gradient {
+        background: linear-gradient(
+          125deg,
+          #0a3d2e 0%,
+          #146048 18%,
+          #1f8a64 38%,
+          #2fa376 52%,
+          #17806a 68%,
+          #14785f 82%,
+          #0f4d3a 100%
+        );
+        background-size: 320% 320%;
+        animation: siteGradientFlow 16s ease-in-out infinite;
+      }
+      .site-bg--glow {
+        background: radial-gradient(ellipse 90% 70% at 45% 25%, rgba(80, 220, 160, 0.35) 0%, transparent 55%),
+          radial-gradient(ellipse 70% 50% at 75% 80%, rgba(20, 96, 72, 0.5) 0%, transparent 50%);
+        animation: siteGlowPulse 10s ease-in-out infinite alternate;
+      }
+      .site-bg--stripes {
+        opacity: 0.08;
+        background-image: repeating-linear-gradient(45deg, #fff 0 2px, transparent 2px 14px);
+        background-size: 22px 22px;
+        animation: siteStripeDrift 22s linear infinite;
+      }
+      @keyframes siteGradientFlow {
+        0%,
+        100% {
+          background-position: 12% 35%;
+        }
+        33% {
+          background-position: 88% 42%;
+        }
+        66% {
+          background-position: 55% 78%;
+        }
+      }
+      @keyframes siteGlowPulse {
+        0% {
+          opacity: 0.75;
+          transform: scale(1);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1.06);
+        }
+      }
+      @keyframes siteStripeDrift {
+        from {
+          background-position: 0 0;
+        }
+        to {
+          background-position: 44px 44px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .site-bg--gradient,
+        .site-bg--glow,
+        .site-bg--stripes {
+          animation: none !important;
+        }
+        .site-bg--gradient {
+          background-size: 100% 100%;
+          background-position: center;
+        }
+        .site-bg--glow {
+          opacity: 0.85;
+          transform: none;
+        }
+      }
+
+      /* DexScreener: full-width bleed + tall embed */
+      .dex-chart-bleed {
+        width: 100vw;
+        margin-left: calc(50% - 50vw);
+        padding-left: clamp(0.5rem, 2vw, 1.25rem);
+        padding-right: clamp(0.5rem, 2vw, 1.25rem);
+        box-sizing: border-box;
+      }
+      .dex-chart-frame {
+        width: 100%;
+        height: min(88vh, 960px);
+        min-height: 560px;
+        border: none;
+        display: block;
+        vertical-align: top;
+      }
+      @media (max-width: 640px) {
+        .dex-chart-frame {
+          min-height: 480px;
+          height: min(82vh, 920px);
+        }
+      }
+    </style>
+  </head>
   <body>
-    <div id="root"></div>
+    <div
+      class="site-shell min-h-screen w-full overflow-hidden relative font-extrabold"
+      style="font-family: 'Bangers', Impact, 'Arial Black', system-ui, sans-serif"
+    >
+      <div class="site-bg site-bg--gradient" aria-hidden="true"></div>
+      <div class="site-bg site-bg--glow" aria-hidden="true"></div>
+      <div class="site-bg site-bg--stripes" aria-hidden="true"></div>
+
+      <header class="relative z-10 flex items-center justify-between px-6 md:px-12 py-6">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-white grid place-items-center shadow-lg">
+            <span class="text-emerald-700 text-xl font-black">S</span>
+          </div>
+          <h1
+            class="text-white text-2xl md:text-3xl tracking-wider drop-shadow-[2px_2px_0_rgba(0,0,0,0.35)]"
+            style="letter-spacing: 0.08em"
+          >
+            SCAMMAN
+          </h1>
+        </div>
+        <div class="hidden md:flex items-center gap-3 text-white/90">
+          <a
+            href="https://x.com/scammansol"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="px-3 py-2 rounded-md hover:bg-white/10 transition flex items-center gap-2 text-sm"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+              <path
+                d="M18.244 2H21l-6.52 7.45L22 22h-6.793l-4.77-6.07L4.8 22H2.04l6.99-7.99L2 2h6.91l4.32 5.71L18.244 2Zm-2.382 18h1.69L8.21 4H6.4l9.46 16Z"
+              />
+            </svg>
+            X
+          </a>
+       
+            <a
+            href="https://swap.pump.fun/?input=So11111111111111111111111111111111111111112&output=abcd"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="px-3 py-2 rounded-md hover:bg-white/10 transition flex items-center gap-2 text-sm"
+          >
+          
+            BUY NOW
+          </a>
+        </div>
+      </header>
+
+      <main class="relative z-10 px-6 md:px-12 pb-24 max-w-6xl mx-auto">
+        <div class="text-center mt-4 md:mt-8">
+          <p
+            class="text-white/80 text-sm md:text-base tracking-[0.3em] mb-3"
+            style="font-family: system-ui, sans-serif; font-weight: 600"
+          >
+            CLICK HIM. HE CAN’T STOP.
+          </p>
+          <h2
+            class="text-white text-5xl md:text-7xl leading-none drop-shadow-[3px_3px_0_rgba(0,0,0,0.35)]"
+            style="letter-spacing: 0.04em"
+          >
+            EVERY WORD IS A <span style="color: #ffd43b">LIE</span><br />
+            EVERY PROMISE A <span style="color: #ff3b3b">SCAM</span>
+          </h2>
+        </div>
+
+        <div class="relative mt-10 md:mt-14 mx-auto" style="max-width: 880px">
+          <div
+            class="face-card relative rounded-3xl overflow-hidden border-[6px] border-black shadow-[10px_10px_0_0_rgba(0,0,0,0.45)]"
+            style="aspect-ratio: 16 / 9; background: #1f8a64"
+          >
+            <button
+              type="button"
+              id="face-btn"
+              aria-label="Make him talk"
+              class="absolute inset-0 w-full h-full block focus:outline-none z-0"
+              style="
+                background-image: url('/hf_20260428_075602_0376b7fc-a469-408f-801f-b9cdf8b47c93.png');
+                background-size: cover;
+                background-position: center;
+                cursor: pointer;
+              "
+            ></button>
+            <div class="face-card__hover-hint" aria-hidden="true">
+              <span class="face-card__hover-text">click this</span>
+            </div>
+            <div id="flyers-root" class="absolute inset-0 pointer-events-none overflow-hidden z-[8]"></div>
+            <div class="absolute top-4 right-4 flex gap-2 z-10">
+              <div
+                class="px-3 py-1.5 rounded-lg border-[3px] border-black bg-black/70 text-white text-xs md:text-sm flex items-center gap-2 shadow-[3px_3px_0_0_rgba(0,0,0,0.6)]"
+                style="font-family: system-ui, sans-serif"
+              >
+                <span class="inline-block w-2.5 h-2.5 rounded-full" style="background: #ffd43b"></span>
+                <span class="tracking-widest">LIES</span>
+                <span id="count-lie" class="font-black tabular-nums" style="color: #ffd43b">0</span>
+              </div>
+              <div
+                class="px-3 py-1.5 rounded-lg border-[3px] border-black bg-black/70 text-white text-xs md:text-sm flex items-center gap-2 shadow-[3px_3px_0_0_rgba(0,0,0,0.6)]"
+                style="font-family: system-ui, sans-serif"
+              >
+                <span class="inline-block w-2.5 h-2.5 rounded-full" style="background: #ff3b3b"></span>
+                <span class="tracking-widest">SCAMS</span>
+                <span id="count-scam" class="font-black tabular-nums" style="color: #ff3b3b">0</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-8 flex flex-col items-center gap-4">
+            <button
+              type="button"
+              id="copy-ca"
+              class="group relative inline-flex items-center gap-3 px-6 md:px-10 py-4 md:py-5 rounded-2xl border-[5px] border-black bg-yellow-300 hover:bg-yellow-200 active:translate-y-[2px] active:shadow-[3px_3px_0_0_rgba(0,0,0,0.6)] transition-all shadow-[6px_6px_0_0_rgba(0,0,0,0.6)] text-black"
+            >
+              <span id="copy-label" class="text-lg md:text-2xl tracking-widest">COPY CA</span>
+              <span id="copy-icon-default" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5">
+                  <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+                  <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+                </svg>
+              </span>
+              <span id="copy-icon-done" class="hidden" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5">
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+              </span>
+            </button>
+            <code
+              id="ca-display"
+              class="text-white/80 text-xs md:text-sm break-all max-w-full px-3 py-1 rounded bg-black/30 border border-white/10"
+              style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace"
+            ></code>
+
+            <!-- Gallery directly below Copy CA + mint display -->
+            <section class="w-full mt-10 text-center">
+              <h3 class="text-white text-2xl md:text-3xl tracking-widest drop-shadow-[2px_2px_0_rgba(0,0,0,0.35)] mb-5">
+                MEME GALLERY
+              </h3>
+              <!-- One horizontal row of three on all screen sizes -->
+              <div class="meme-gallery">
+                <div class="meme-gallery-item rounded-2xl border-[4px] border-black shadow-[6px_6px_0_0_rgba(0,0,0,0.45)] bg-emerald-900/40">
+                  <img src="/gallery/1.jpg" alt="Gallery image 1" loading="lazy" />
+                </div>
+                <div class="meme-gallery-item rounded-2xl border-[4px] border-black shadow-[6px_6px_0_0_rgba(0,0,0,0.45)] bg-emerald-900/40">
+                  <img src="/gallery/2.jpg" alt="Gallery image 2" loading="lazy" />
+                </div>
+                <div class="meme-gallery-item rounded-2xl border-[4px] border-black shadow-[6px_6px_0_0_rgba(0,0,0,0.45)] bg-emerald-900/40">
+                  <img src="/gallery/3.jpg" alt="Gallery image 3" loading="lazy" />
+                </div>
+              </div>
+            </section>
+
+            <!-- DexScreener Solana embed (full-width + large height) -->
+            <section class="w-full mt-12">
+              <h3 class="text-white text-2xl md:text-3xl tracking-widest drop-shadow-[2px_2px_0_rgba(0,0,0,0.35)] mb-5 text-center">
+                CHART
+              </h3>
+              <div class="dex-chart-bleed">
+                <div class="rounded-2xl overflow-hidden border-[4px] border-black shadow-[6px_6px_0_0_rgba(0,0,0,0.45)] bg-black/30">
+                  <iframe
+                    id="dex-iframe"
+                    title="DexScreener"
+                    class="dex-chart-frame"
+                    allow="clipboard-write"
+                    loading="lazy"
+                  ></iframe>
+                </div>
+              </div>
+            </section>
+
+            <!-- Buy now -->
+    
+
+        <section class="mt-20 grid md:grid-cols-3 gap-5">
+          <div
+            class="rounded-2xl border-[4px] border-black bg-emerald-700/40 backdrop-blur-sm p-5 shadow-[6px_6px_0_0_rgba(0,0,0,0.45)] hover:-translate-y-1 transition-transform"
+          >
+            <h3
+              class="text-3xl tracking-widest mb-2"
+              style="color: #ffd43b; -webkit-text-stroke: 1.5px #000; text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4)"
+            >
+              HE LIES
+            </h3>
+            <p class="text-white/90 text-sm leading-relaxed" style="font-family: system-ui, sans-serif; font-weight: 500">
+              Every click, another fabrication launched into the void.
+            </p>
+          </div>
+          <div
+            class="rounded-2xl border-[4px] border-black bg-emerald-700/40 backdrop-blur-sm p-5 shadow-[6px_6px_0_0_rgba(0,0,0,0.45)] hover:-translate-y-1 transition-transform"
+          >
+            <h3
+              class="text-3xl tracking-widest mb-2"
+              style="color: #ff3b3b; -webkit-text-stroke: 1.5px #000; text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4)"
+            >
+              HE SCAMS
+            </h3>
+            <p class="text-white/90 text-sm leading-relaxed" style="font-family: system-ui, sans-serif; font-weight: 500">
+              He promises non-profit and means not YOUR profit.
+            </p>
+          </div>
+          <div
+            class="rounded-2xl border-[4px] border-black bg-emerald-700/40 backdrop-blur-sm p-5 shadow-[6px_6px_0_0_rgba(0,0,0,0.45)] hover:-translate-y-1 transition-transform"
+          >
+            <h3
+              class="text-3xl tracking-widest mb-2"
+              style="color: #ffffff; -webkit-text-stroke: 1.5px #000; text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4)"
+            >
+              YOU LAUGH
+            </h3>
+            <p class="text-white/90 text-sm leading-relaxed" style="font-family: system-ui, sans-serif; font-weight: 500">
+              Because at this point, what else can you do?
+            </p>
+          </div>
+        </section>
+
+        <footer class="mt-20 pb-6 text-center text-white/60 text-xs tracking-widest">
+          NOT FINANCIAL ADVICE. MEME ONLY. MEANT AS PARODY / SATIRE. ANY RESEMBLANCE TO A REAL PERSON IS PURELY COINCIDENCE.
+        </footer>
+      </main>
+    </div>
+
+    <script type="module">
+      import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/+esm";
+
+      const SUPABASE_URL = "https://fxfcihjbpxyfxerudopi.supabase.co";
+      const SUPABASE_ANON_KEY =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4ZmNpaGpicHh5ZnhlcnVkb3BpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczNTkxNjMsImV4cCI6MjA5MjkzNTE2M30.nRgBRj6d3-zCELkQMdeOAlx0LEX0IYRigtAkmBU448I";
+
+      const WORD_COLORS = { LIE: "#FFD43B", SCAM: "#FF3B3B" };
+      const CLOSED_IMG = "/hf_20260428_075602_0376b7fc-a469-408f-801f-b9cdf8b47c93.png";
+      const OPEN_IMG = "/hf_20260428_092806_0deb888c-3895-408b-b754-aa5fe56d94b6.png";
+
+      const mint =
+        document.querySelector('meta[name="token-mint"]')?.getAttribute("content")?.trim() || "abcd";
+
+      document.getElementById("ca-display").textContent = mint;
+      document.getElementById("dex-iframe").src =
+        `https://dexscreener.com/solana/6AVAUKa9uxQpruHZUinFECpXEh1usRVtzQWK8N2wpump?embed=1&theme=dark&trades=0&info=0`;
+      document.getElementById("buy-link").href = `https://jup.ag/swap/SOL-${mint}`;
+
+      const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      let counts = { LIE: 0, SCAM: 0 };
+      const elLie = document.getElementById("count-lie");
+      const elScam = document.getElementById("count-scam");
+
+      supabase
+        .from("shot_counter")
+        .select("id, count")
+        .then(({ data }) => {
+          if (!data) return;
+          for (const row of data) {
+            if (row.id === "LIE" || row.id === "SCAM") counts[row.id] = Number(row.count) || 0;
+          }
+          elLie.textContent = counts.LIE.toLocaleString();
+          elScam.textContent = counts.SCAM.toLocaleString();
+        });
+
+      let flyerId = 0;
+      const flyersRoot = document.getElementById("flyers-root");
+      const faceBtn = document.getElementById("face-btn");
+
+      faceBtn.addEventListener("click", () => {
+        const word = Math.random() < 0.5 ? "LIE" : "SCAM";
+        const id = ++flyerId;
+        const duration = 1100 + Math.random() * 400;
+        const top = 38 + Math.random() * 10;
+        const rotate = -8 + Math.random() * 16;
+
+        const span = document.createElement("span");
+        span.className = "absolute pointer-events-none select-none whitespace-nowrap";
+        span.textContent = word + "!";
+        span.style.top = `${top}%`;
+        span.style.left = "32%";
+        span.style.color = WORD_COLORS[word];
+        span.style.fontSize = "clamp(28px, 5vw, 64px)";
+        span.style.webkitTextStroke = "3px #000";
+        span.style.textShadow = "4px 4px 0 rgba(0,0,0,0.45)";
+        span.style.animation = `flyOut ${duration}ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards`;
+        span.style.transform = `rotate(${rotate}deg)`;
+        flyersRoot.appendChild(span);
+
+        faceBtn.classList.remove("face-shake");
+        void faceBtn.offsetWidth;
+        faceBtn.classList.add("face-shake");
+        faceBtn.style.backgroundImage = `url('${OPEN_IMG}')`;
+        setTimeout(() => faceBtn.classList.remove("face-shake"), 180);
+        setTimeout(() => {
+          faceBtn.style.backgroundImage = `url('${CLOSED_IMG}')`;
+        }, 220);
+        setTimeout(() => {
+          span.remove();
+        }, duration + 100);
+
+        counts[word]++;
+        elLie.textContent = counts.LIE.toLocaleString();
+        elScam.textContent = counts.SCAM.toLocaleString();
+        supabase.rpc("increment_shot_counter", { word }).then(() => {});
+      });
+
+      const copyBtn = document.getElementById("copy-ca");
+      const copyLabel = document.getElementById("copy-label");
+      const iconDefault = document.getElementById("copy-icon-default");
+      const iconDone = document.getElementById("copy-icon-done");
+
+      copyBtn.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(mint);
+        } catch {
+          const ta = document.createElement("textarea");
+          ta.value = mint;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand("copy");
+          document.body.removeChild(ta);
+        }
+        copyLabel.textContent = "COPIED!";
+        iconDefault.classList.add("hidden");
+        iconDone.classList.remove("hidden");
+        setTimeout(() => {
+          copyLabel.textContent = "COPY CA";
+          iconDefault.classList.remove("hidden");
+          iconDone.classList.add("hidden");
+        }, 1800);
+      });
+    </script>
   </body>
 </html>
